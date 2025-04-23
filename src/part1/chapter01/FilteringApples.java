@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import part1.Apple;
+import part1.Color;
+
 import static part1.Color.*;
 public class FilteringApples {
     public static void main(String[] args) {

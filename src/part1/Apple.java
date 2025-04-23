@@ -1,4 +1,4 @@
-package part1.chapter02;
+package part1;
 
 public class Apple {
     private int weight = 0; 
