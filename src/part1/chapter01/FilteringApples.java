@@ -10,19 +10,28 @@ public class FilteringApples {
             new Apple(155, Color.GREEN),
             new Apple(120, Color.RED));        
 
-            List<Apple> greenResult = filterGreemApples(inventory);
+            List<Apple> greenResult = filterGreenApples(inventory);
+            System.out.println("1 Green");
             for (Apple apple : greenResult) {
                 System.out.println("apple = " + apple);
             }
-            System.out.println("=====");
+            
+            System.out.println("2 Red");
             List<Apple> redResult = filterRedApples(inventory);
             for (Apple apple : redResult) {
                 System.out.println("apple = " + apple);
             }
+            System.out.println("3 Color");
+
+            List<Apple> colorResult = filterApplesByColor(inventory, GREEN);
+            
+            for (Apple apple : colorResult) {
+                System.out.println(apple);
+            }
 
         }
 
-    public static List<Apple> filterGreemApples(List<Apple> invertory){
+    public static List<Apple> filterGreenApples(List<Apple> invertory){
         
         List<Apple> result = new ArrayList<>();
         for (Apple apple : invertory) {
@@ -43,4 +52,39 @@ public class FilteringApples {
         }
         return result;
     }
+
+    // value parameter 
+    public static List<Apple> filterApplesByColor(List<Apple> inventory, Color color){
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if(color.equals(apple.getColor())){
+                result.add(apple);
+            }
+        }
+        return result; 
+    }
+
+    public static List<Apple> filterApplesByWeight(List<Apple> inventory, int weight){
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if(apple.getWeight() > 150){
+                result.add(apple);
+            }
+        }
+        
+        return result;
+    }
+
+    public static List<Apple> filterApples(List<Apple> inventory, Color color, int weight, boolean flag){
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if((flag && apple.getColor().equals(color)) || 
+                (!flag && apple.getWeight() > weight)){
+                result.add(apple);
+            }
+        }
+        
+        return result;
+    }
+
 }
