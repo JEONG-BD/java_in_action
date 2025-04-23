@@ -1,9 +1,12 @@
-package part1.chapter01;
+package part1.chapter02;
+import static part1.Color.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import part1.Apple;
-import static part1.Color.*;
+import part1.Color;
 public class FilteringApples {
     public static void main(String[] args) {
         List<Apple>inventory = Arrays.asList(
@@ -11,25 +14,16 @@ public class FilteringApples {
             new Apple(155, Color.GREEN),
             new Apple(120, Color.RED));        
 
-            List<Apple> greenResult = filterGreenApples(inventory);
-            System.out.println("1 Green");
-            for (Apple apple : greenResult) {
-                System.out.println("apple = " + apple);
-            }
-            
-            System.out.println("2 Red");
-            List<Apple> redResult = filterRedApples(inventory);
-            for (Apple apple : redResult) {
-                System.out.println("apple = " + apple);
-            }
-            System.out.println("3 Color");
+            List<Apple> greenResult = fillterApples(inventory, new AppleGreenColorPredicate());
+            List<Apple> redResult = fillterApples(inventory, new AppleRedColorPredicate());
 
-            List<Apple> colorResult = filterApplesByColor(inventory, GREEN);
-            
-            for (Apple apple : colorResult) {
+            for (Apple apple : greenResult) {
                 System.out.println(apple);
             }
 
+            for (Apple apple : redResult) {
+                System.out.println(apple);
+            }
         }
 
     public static List<Apple> filterGreenApples(List<Apple> invertory){
@@ -81,6 +75,18 @@ public class FilteringApples {
         for (Apple apple : inventory) {
             if((flag && apple.getColor().equals(color)) || 
                 (!flag && apple.getWeight() > weight)){
+                result.add(apple);
+            }
+        }
+        
+        return result;
+    }
+
+    public static List<Apple> fillterApples(List<Apple> inventory, ApplePredicate predicate){
+        List<Apple> result = new ArrayList<>();
+
+        for (Apple apple : inventory) {
+            if(predicate.test(apple)){
                 result.add(apple);
             }
         }
