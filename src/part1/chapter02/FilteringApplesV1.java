@@ -7,15 +7,15 @@ import java.util.List;
 
 import part1.Apple;
 import part1.Color;
-public class FilteringApples {
+public class FilteringApplesV1 {
     public static void main(String[] args) {
         List<Apple>inventory = Arrays.asList(
             new Apple(80, Color.GREEN),
             new Apple(155, Color.GREEN),
             new Apple(120, Color.RED));        
 
-            List<Apple> greenResult = fillterApples(inventory, new AppleGreenColorPredicate());
-            List<Apple> redResult = fillterApples(inventory, new AppleRedColorPredicate());
+            List<Apple> greenResult = filterApplesPredicate(inventory, new AppleGreenColorPredicate());
+            List<Apple> redResult = filterApplesPredicate(inventory, new AppleRedColorPredicate());
             
             for (Apple apple : greenResult) {
                 System.out.println(apple);
@@ -29,7 +29,7 @@ public class FilteringApples {
             prettyPrintApple(inventory, new AppleSimpleFormatter());
 
             // anonymous class 
-            List<Apple> redApples = fillterApples(inventory, new ApplePredicate() {
+            List<Apple> redApples = filterApplesPredicate(inventory, new ApplePredicate() {
                 public boolean test(Apple apple){
                     return RED.equals(apple.getColor());
                 }
@@ -93,7 +93,7 @@ public class FilteringApples {
         return result;
     }
 
-    public static List<Apple> fillterApples(List<Apple> inventory, ApplePredicate predicate){
+    public static List<Apple> filterApplesPredicate(List<Apple> inventory, ApplePredicate predicate){
         List<Apple> result = new ArrayList<>();
 
         for (Apple apple : inventory) {
