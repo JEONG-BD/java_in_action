@@ -1,12 +1,12 @@
-package part1.chapter02;
-import static part1.Color.*;
+package main.part1.chapter02;
+import static main.part1.Color.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import part1.Apple;
-import part1.Color;
+import main.part1.Apple;
+import main.part1.Color;
 public class FilteringApplesV1 {
     public static void main(String[] args) {
         List<Apple>inventory = Arrays.asList(
