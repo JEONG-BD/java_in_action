@@ -59,6 +59,7 @@ public static List<Apple> filterRedApples(List<Apple> invertory){
 }
 ``` 
 - 위 코드를 통해서 녹색 사과 및 빨간 사과를 필터링 하는 것이 가능하지만 다양한 색을 필터링하는 등의 변화에 대응하기 어렵다. 
+
 - **거의 비슷한 코드가 반복 존재한다면 그 코드를 추상화한다**.
 
 ### 2.1.2 두전빼 시도 : 색을 파라미터화 
@@ -151,6 +152,22 @@ classDiagram
 
 ### 2.2.1 네번째 시도 : 추상적 조건으로 필터링
 ```java
+public class AppleGreenColorPredicate implements ApplePredicate{
+
+    @Override
+    public boolean test(Apple apple) {
+        return GREEN.equals(apple.getColor());
+    }
+}
+
+public class AppleRedColorPredicate implements ApplePredicate{
+
+    @Override
+    public boolean test(Apple apple) {
+        return RED.equals(apple.getColor());
+    }
+}
+
 public static List<Apple> filterApplesPredicate(List<Apple> inventory, ApplePredicate predicate){
     List<Apple> result = new ArrayList<>();
 
@@ -164,15 +181,59 @@ public static List<Apple> filterApplesPredicate(List<Apple> inventory, ApplePred
 }
 
 ```
+- 컬렉션 탐색 로직과 각 항목에 적용할 동작을 분리할 수 있다는 것이 동작파라미터의 강점이다. 
+- 하나의 메서드가 다른 동작을 수행할 수 있도록 재활용 할 수 있으며 유연한 API를 만들때 동작 파라미터화가 중요한 역할을 한다. 
 
 ***
 ## 2.3 복잡한 과정 간소화 
+- 사용하기 복잡한 기능, 개념을 사용하고 싶은 사람은 없다. 
+- 현재 filterApples메서드로 새로운 동작을 전달하려면 ApplePredicate 인터페이스를 구현하는 여러 클래스를 정의 후 인스턴스화 해야 한다. 
+- 자바는 클래스의 선언과 인스턴스화를 동시에 수행할 수 있는 익명 클래스라는 기법을 제공한다. 
+- 익명 클래스를 이용하면 코드의 양을 줄일 수 있다. 
+
 #### 2.3.1 익명클래스 
+- 익명 클래스는 자바의 지역 클래스와 비슷한 개념이다. 말 그대로 이름이 없는 클래스를 의미한다. 
+
 #### 2.3.2 다섯번째 시도 : 익명클래스 사용
+```java
+List<Apple> redApples = filterApplesPredicate(inventory, new ApplePredicate() {
+    public boolean test(Apple apple){
+        return RED.equals(apple.getColor());
+            }
+    });
+```
+- 익명 클래스 역시 많은 양을 차지 하고 익명 클래스 사용에 익숙하지 않다. 
+- 코드의 장황함은 구현과 유지보수에 시간이 오래 걸린다. 
+- 익명 클래스로 인터페이스를 구현 하는 여러 클래스를 선언하는 과정을 조금 줄일 수 있지만 있지만 새로운 동작을 정의하는 메서드를 구현해야 한다는 점은 변하지 않는다. 
+
 #### 2.3.3 여섯번째 시도 : 람다표현식 사용
+- 자바 8의 람다를 사용하면 간단하게 재구현 할 수 있다. 
+```java
+List<Apple> result = filterApples(inventory, (Apple apple) -> RED.equals(apple.getColor()));
+```
 #### 2.3.4 일곱번째 시도 : 리스트 형식으로 추상화 
+```java
+public static <T> List<T> filter(List<T> inventory, Predicate<T> predicate){
+    List<T> result = new ArrayList<>();
+
+    for (T apple : inventory) {
+        if(predicate.test(apple)){
+            result.add(apple);
+        }
+    }
+    
+    return result;
+}
+
+List<Apple> result2 = filter(inventory, apple -> GREEN.equals(apple.getColor()));
+List<Apple> result3 = filter(inventory, apple -> apple.getWeight() > 150 );
+
+```
+- 다양한 리스트에 필터 메서드를 사용할 수 있다. 
 
 ***
 ## 2.4 실전예제 
+- 동작 파라미터화는 변화하는 요구사항에 쉽게 적응하는 유용한 패턴이다. 
+- 동작 파라미터화 패턴은 동작을 캡슐화한 다음에 메서드로 전달해서 메서드의 동작을 파라미터화 한다. 
 ***
 > 마틴 게이브리얼 우르마, 『모던 자바 인 액션』, 한빛미디어 (2019)  
