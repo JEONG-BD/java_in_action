@@ -16,7 +16,7 @@ public class FilteringApples {
 
             List<Apple> greenResult = fillterApples(inventory, new AppleGreenColorPredicate());
             List<Apple> redResult = fillterApples(inventory, new AppleRedColorPredicate());
-
+            
             for (Apple apple : greenResult) {
                 System.out.println(apple);
             }
@@ -24,6 +24,17 @@ public class FilteringApples {
             for (Apple apple : redResult) {
                 System.out.println(apple);
             }
+
+            prettyPrintApple(inventory, new AppleFancyFormatter());
+            prettyPrintApple(inventory, new AppleSimpleFormatter());
+
+            // anonymous class 
+            List<Apple> redApples = fillterApples(inventory, new ApplePredicate() {
+                public boolean test(Apple apple){
+                    return RED.equals(apple.getColor());
+                }
+            });
+            System.out.println(redApples);
         }
 
     public static List<Apple> filterGreenApples(List<Apple> invertory){
@@ -92,6 +103,14 @@ public class FilteringApples {
         }
         
         return result;
+    }
+
+    public static void prettyPrintApple(List<Apple> inventory, AppleFormatter formatter){
+        
+        for (Apple apple : inventory) {
+           String output = formatter.accept(apple);
+            System.out.println(output);
+        }
     }
 
 }
