@@ -1,4 +1,4 @@
-package main.part1;
+package part1;
 
 public enum Color {
     RED, 

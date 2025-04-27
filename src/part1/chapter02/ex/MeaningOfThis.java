@@ -1,4 +1,4 @@
-package main.part1.chapter02.ex;
+package part1.chapter02.ex;
 
 public class MeaningOfThis {
 

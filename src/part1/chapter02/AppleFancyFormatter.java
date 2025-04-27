@@ -1,6 +1,6 @@
-package main.part1.chapter02;
+package part1.chapter02;
 
-import main.part1.Apple;
+import part1.Apple;
 
 public class AppleFancyFormatter implements AppleFormatter{
 
