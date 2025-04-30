@@ -19,8 +19,16 @@
 * [5.5.1 요소의 합](#551-요소의-합) 
 * [5.5.2 최댓값과 최솟값](#552-최댓값과-최솟값) 
 
-[5.7 숫자형 스트림](#57-숫자형-스트림)  
+[5.7 숫자형 스트림](#57-숫자형-스트림)
+* [5.7.1 기본형 특화 스트림](#571-기본형-특화-스트림)
+* [5.7.2 숫자 범위](#572-숫자-범위)
+
 [5.8 스트림 만들기](#58-스트림-만들기)  
+* [5.8.1 값으로 스트림 만들기](#581-값으로-스트림-만들기)
+* [5.8.2 null이 될 수 있는 객체로 스트림 만들기](#582-null이-될-수-있는-객체로-스트림-만들기)
+* [5.8.3 배열로 스트림 만들기](#583-배열로-스트림-만들기)
+* [5.8.4 파일로 스트림 만들기](#584-파일로-스트림-만들기)
+
 [5.9 마치며](#59-마치며)
 
 
@@ -84,7 +92,8 @@ List<Dish> skipDishes =
 ***
 ## 5.3 매핑  
 ### 5.3.1 스트림의 각 요소에 함수 적용하기
-- 스트림은 함수를 인수로 받는 map 메서드를 지원한다. 인수로 제공된 함수는 각 요소에 적용되며 함수를 적용한 결과가 새로운 요소로 매핑된다. 
+- 스트림은 함수를 인수로 받는 map 메서드를 지원한다. 
+- 인수로 제공된 함수는 각 요소에 적용되며 함수를 적용한 결과가 새로운 요소로 매핑된다. 
 - 메서드 체이닝을 지원한다. 
 ```java
 List<String> dishNames = 
@@ -183,16 +192,89 @@ Optional<Integer> optMin = numbers.stream().reduce(Integer::min);
 System.out.println(optMin.get());
 
 ```
-### 5.5.3 
-***
-## 5.6 실전 연습
 ***
 ## 5.7 숫자형 스트림
+### 5.7.1 기본형 특화 스트림 
+- 자바 8에서는 세가지 기본형 특화 스트림을 제공한다. 
+- 스트림 API는 박싱 비용을 피할 수 있도록 스트림을 제공한다. 
+- 특화 스트림은 오직 박싱 과정에서 일어나는 효율성과 관련이 있으며 스트림에 추가 기능을 제공하지 않는다.  
+#### 숫자 스트림 매핑 
+```java
+int calories = menu.stream()
+                .mapToInt(Dish::getCalories)
+                .sum();
+```
+#### 객체 스트림으로 복원하기 
+- boxed 메서드를 이용해서 특화 스트림을 일반 스트림으로 변환 가능하다. 
+```java        
+IntStream intStream = menu.stream().mapToIn(Dish::getCalories)
+Stream<Integer> stream = intStream.boxed();
+```
+#### 기본값 OptionalInt 
+- 스트림에 요소가 없는 상황과 실제 최댓값이 0인 상황을 구별하기 위해서는 OptionalInt, OptionalDouble, OptionalLong 세가지 기본형 특화 스트림 버전도 제공한다. 
+
+### 5.7.2 숫자 범위 
+- 특정 범위의 숫자를 잉요해야 하는 상황을 발생 했을 때는 range, rangeClosed라는 두가지 정적 메서드를 이용한다. 
+- 두 메서드 모두 첫 번째 인수로 시작값, 두번째 인수로 종료값을 갖는다. 
+```java
+IntStream evenNumbers = 
+    IntStream.rangeClosed(1, 100)
+            .filter(n -> n % 2 == 0);
+
+IntStream evenNumbers = 
+    IntStream.range(1, 100)
+            .filter(n -> n % 2 == 0);
+```
 ***
 ## 5.8 스트림 만들기
-***
-## 5.9 마치며
+### 5.8.1 값으로 스트림 만들기 
+- 임의의 수를 인수로 받는 정적 메서드 Stream.of를 이용해서 스트림을 만들 수 있다. 
+```java
+Stream<String> stream = Stream.of("Modern", "Java", "In", "Action");
+```
+### 5.8.2 null이 될 수 있는 객체로 스트림 만들기 
+- 자바 9에서는 null이 될 수 있는 개체를 스트림으로 만들 수 있는 새로운 메소드가 추가 되었다. 
+```java
+Stream<String> homeValueStream = homwValue == null? Stream.empty() : Stream.of(homwValue);
+Stream<String> homeValue2 = Stream.ofNullable(System.getProperty("home"));
+```
+### 5.8.3 배열로 스트림 만들기 
+- 배열을 인수로 받는 정적 메서드 Arrays.stream을 이용해서 스트림을 만들 수 있다. 
+```java
+int[] numbers = {2, 3, 5, 7, 11, 13};
+int sum = Arrays.stream(numbers).sum();
+```
+### 5.8.4 파일로 스트림 만들기 
+- java.nio.file.Files의 많은 정적 메서드가 스트림을 반환한다. 
+```java
+try (Stream<String> lines = Files.lines(Paths.get(FILE), Charset.defaultCharset())) {
+    long uniqueWords = lines
+        .flatMap(line -> Arrays.stream(line.split(" ")))
+        .distinct()
+        .count();
+    System.out.println("고유한 단어 : " + uniqueWords);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+### 5.8.5 함수로 무한 스트림 만들기 
+- 스트림 API는 함수에서 스트림을 만들 수 있는 두 정적 메서드 Stream.iterate, Stream.generate를 제공한다. 
+- 두 연산을 사용해서 무한 스트림 크기가 고정되지 않은 스트림을 만들 수 있다. 
+#### iterate 메서드 
+- iterate는 요청할 때 마다 값을 생산할 수 있으며 끝이 없으므로 무한 스트림을 만들 수 있는데 이러한 무한 스트림을 언바운드 스트림이라고 표현한다. 
+```java
+Stream.iterate(0, n -> n + 2)
+.limit(10)
+.forEach(System.out::println);
 
+Stream.iterate(0, n -> n + 4)
+.takeWhile(n -> n < 100)
+.forEach(System.out::println);
+```
+
+#### generate 메서드 
+- iterate와 비슷하게 generate도 요구할 때 값을 계산하는 무한 스트림을 만들 수 있지만, iterate와 달리 generate는 생산된 각 값을 연속적으로 계산하지 않는다. 
+- 병렬 코드에서 발행자에 상태가 있으면 안전하지 않다. 
 ***
 > 마틴 게이브리얼 우르마, 『모던 자바 인 액션』, 한빛미디어 (2019)  
 
