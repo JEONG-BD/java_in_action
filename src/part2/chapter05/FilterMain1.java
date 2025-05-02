@@ -1,7 +1,6 @@
 package part2.chapter05;
 
 import static java.util.stream.Collectors.toList;
-import static part2.Dish.menu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +9,8 @@ import part2.Dish;
 
 public class FilterMain1 {
     public static void main(String[] args) {
-        List<Dish> vegetarianMenu = 
-            menu.stream()
+        List<Dish> vegetarianMenu =
+            Dish.menu.stream()
             .filter(Dish::isVegetarian)
             .collect(toList());
         for (Dish dish : vegetarianMenu) {

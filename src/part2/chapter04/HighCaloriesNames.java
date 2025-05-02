@@ -1,14 +1,15 @@
 package part2.chapter04;
 
+import part2.Dish;
+
 import static java.util.stream.Collectors.toList;
-import static part2.Dish.menu;
 
 import java.util.List;
 
 public class HighCaloriesNames {
 
     public static void main(String[] args) {
-        List<String> names = menu.stream()
+        List<String> names = Dish.menu.stream()
                                 .peek(System.out::println)
                                 .filter(d -> d.getCalories() > 300)
                                 .peek(System.out::println)
@@ -19,7 +20,7 @@ public class HighCaloriesNames {
             System.out.println("name : " + string);
         }
 
-        long namesCount = menu.stream()
+        long namesCount = Dish.menu.stream()
                                 .peek(System.out::println)
                                 .filter(d -> d.getCalories() > 300)
                                 .peek(System.out::println)

@@ -1,7 +1,8 @@
 package part2.chapter05;
 
+import part2.Dish;
+
 import static java.util.stream.Collectors.toList;
-import static part2.Dish.menu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.stream.Stream;
 
 public class MappingMain1 {
     public static void main(String[] args) {
-        List<String> dishNames = menu.stream()
+        List<String> dishNames = Dish.menu.stream()
                                     .map(d -> d.getName())
                                     .collect(toList());
 
-        List<Integer> dishNameLength = menu.stream()
+        List<Integer> dishNameLength = Dish.menu.stream()
                                     .map(d -> d.getName())
                                     .map(String::length)
                                     .collect(toList());

@@ -4,7 +4,6 @@ import part2.Dish;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static part2.Dish.menu;
 public class PartitionByMain {

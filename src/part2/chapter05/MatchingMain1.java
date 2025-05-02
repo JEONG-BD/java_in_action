@@ -1,7 +1,5 @@
 package part2.chapter05;
 
-import static part2.Dish.menu;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,16 +9,16 @@ import part2.Dish;
 public class MatchingMain1 {
 
     public static void main(String[] args) {
-        boolean hasVegetarian = menu.stream()
+        boolean hasVegetarian = Dish.menu.stream()
             .anyMatch(Dish::isVegetarian);
         System.out.println(hasVegetarian);
 
-        boolean isHealthy = menu.stream().allMatch(d -> d.getCalories() < 1000);
+        boolean isHealthy = Dish.menu.stream().allMatch(d -> d.getCalories() < 1000);
         
-        boolean isHealthy2 = menu.stream().noneMatch(d -> d.getCalories() >= 1000);
+        boolean isHealthy2 = Dish.menu.stream().noneMatch(d -> d.getCalories() >= 1000);
         
         Optional<Dish> optDish = 
-            menu.stream() 
+            Dish.menu.stream()
                 .filter(Dish::isVegetarian)
                 .findAny();
         

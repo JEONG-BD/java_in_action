@@ -1,13 +1,10 @@
 package part1.chapter02;
-import static part1.Color.RED;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import part1.Apple;
 import part1.Color;
-import part1.Color.*;
 
 public class ComparatorEx1 {
     public static void main(String[] args) {

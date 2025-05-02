@@ -1,5 +1,4 @@
 package part1.chapter02;
-import static part1.Color.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

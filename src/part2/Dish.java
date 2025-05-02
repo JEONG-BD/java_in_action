@@ -2,7 +2,6 @@ package part2;
 import java.util.Arrays;
 import java.util.List;
 
-import part2.Type.*;
 public class Dish {
 
     private final String name; 

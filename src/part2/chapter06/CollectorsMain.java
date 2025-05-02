@@ -1,10 +1,8 @@
 package part2.chapter06;
 import static java.util.stream.Collectors.*;
-import static part2.Dish.menu;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import part2.Dish;
@@ -62,10 +60,10 @@ public class CollectorsMain {
 //        System.out.println(result.size());
 
 
-        Integer total2 = menu.stream()
+        Integer total2 = Dish.menu.stream()
                 .collect(reducing(0, Dish::getCalories, Integer::sum));
         System.out.println("total2 = " + total2);
-        int total3 = menu.stream().mapToInt(Dish::getCalories).sum();
+        int total3 = Dish.menu.stream().mapToInt(Dish::getCalories).sum();
         System.out.println("total3 = " + total3);
     }
 
@@ -83,46 +81,46 @@ public class CollectorsMain {
     }
 
     private static Optional<Dish> getReducingMax() {
-        Optional<Dish> maxDish = menu.stream().collect(reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
+        Optional<Dish> maxDish = Dish.menu.stream().collect(reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
         return maxDish;
     }
 
     private static Integer getRedcingTotal() {
-        Integer reducingTotal = menu.stream()
+        Integer reducingTotal = Dish.menu.stream()
                 .collect(reducing(0, Dish::getCalories, (i, j) -> i + j));
         return reducingTotal;
     }
 
     private static String getJoiningNames2() {
-        String joiningNames2 = menu.stream()
+        String joiningNames2 = Dish.menu.stream()
                 .map(Dish::getName).collect(joining(", "));
         return joiningNames2;
     }
 
     private static String joiningNames1() {
-        String joiningNames = menu.stream()
+        String joiningNames = Dish.menu.stream()
                 .map(Dish::getName).collect(joining());
         return joiningNames;
     }
 
     private static IntSummaryStatistics getStatistics() {
-        return menu.stream().collect(summarizingInt(Dish::getCalories));
+        return Dish.menu.stream().collect(summarizingInt(Dish::getCalories));
     }
 
     private static Integer totalCalorie() {
-        return menu.stream().collect(summingInt(Dish::getCalories));
+        return Dish.menu.stream().collect(summingInt(Dish::getCalories));
     }
 
     private static Optional<Dish> getMaxCalorie1(Comparator<Dish> dishComparator) {
-        return menu.stream().collect(maxBy(dishComparator));
+        return Dish.menu.stream().collect(maxBy(dishComparator));
     }
 
     private static long getHowManyDishhmenu2() {
-        return menu.stream().count();
+        return Dish.menu.stream().count();
     }
 
     private static long getHowManyDishhmenu1() {
-        return menu.stream().collect(Collectors.counting());
+        return Dish.menu.stream().collect(Collectors.counting());
     }
 
 }
