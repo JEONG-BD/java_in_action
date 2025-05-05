@@ -4,9 +4,18 @@
 
 * [7.1.1 순차 스트림을 병렬 스트림으로 변환하기](#711-순차-스트림을-병렬-스트림으로-변환하기)
 * [7.1.2 스트림 성능 측정](#712-스트림-성능-측정)
+* [7.1.3 병렬 스트림의 올바른 사용법](#713-병렬-스트림의-올바른-사용법)
+* [7.1.4 병렬 스트림 효과적으로 사용하기](#714-병렬-스트림-효과적으로-사용하기)
 
 [7.2 포크 조인 프레임워크](#72-포크-조인-프레임워크)    
-[7.3 Spliterator 인터페이스 ](#73-spliterator-인터페이스-)  
+* [7.2.1 recursivetask 사용](#721-recursivetask-사용)
+* [7.2.2 포크 조인 프레임워크를 제대로 사용하는 방법](#722-포크-조인-프레임워크를-제대로-사용하는-방법)
+* [7.2.3 작업 훔치기](#723-작업-훔치기)
+
+[7.3 Spliterator 인터페이스 ](#73-spliterator-인터페이스)  
+* [7.3.1 분할 과정](#731-분할-과정)
+* [7.3.2 Spliterator의 특성](#732-spliterator의-특성)
+
 ## 7.1 병렬 스트림
 
 - 스트림 인터페이스를 이용하면 아주 간단하게 요소를 병렬로 처리가능하다. 
@@ -54,7 +63,7 @@ Stream.iterate(1L, i-> i +1)
 - 포크 조인 프레임워크는 병렬화할 수 있는 작업을 재귀적으로 작은 작업으로 분할한 다음애 서브테스트 각각의 결과를 합쳐서 전체 결과를 만들도록 설계되었다. 
 - 포크 조인 프레임워크에서는 서브테스크를 스레드 풀의 작업자 스레드에 분산 할당하는 ExecutorService 인터페이스를 구현한다. 
 ### 7.2.1 RecursiveTask 사용 
-- 스레드 풀을 이용하려면 RecursiveTask<R>의 서브클래스를 만드렁야ㅐ 한다. 
+- 스레드 풀을 이용하려면 RecursiveTask<R>의 서브클래스를 만들어야 한다. 
 - R은 병렬화된 테스크가 생성하는 결과 형식 또는 결과가 없을 경우는 RecursiveAction형식이다. 
 - RecursiveTask를 정의하려면 추상메서드 compute를 구현해야 한다. 
 - compute 메서드 구현은 아래와 같은 의사코드 형식을 유지한다. 
@@ -75,7 +84,7 @@ if (태스크가 충분히 작거나 더 이상 분할할 수 없으면) {
 - RecursiveTask내에서는 ForkJoinPool 의 invoke 메서드를 사용하지 말아야한다. 
 - 서브태스크에 fork메서드를 호출해서 ForkJoinPool의 일정을 조절할 수 있다. 
 
-### 7.2.3 작업 훔치기 w
+### 7.2.3 작업 훔치기 
 - 포크 조인 프레임워크에서는 작업 훔치기라는 기법으로 이 문제를 해결한다. 
 - 작업 훔 치기 기법에서는 ForkJoinPool의 모든 스레드를 거의 공정하게 분할한다. 
 - 각각의 스레드는 자 신에게 할당된 태스크를 포함하는 이중 연결 리스트를 참조하면서 작업이 끝날 때 마다 큐의 헤드에서 다른 태스크를 가져와서 작업을 처리한다. 
@@ -87,7 +96,23 @@ if (태스크가 충분히 작거나 더 이상 분할할 수 없으면) {
 ## 7.3 Spliterator 인터페이스 
 - 자바 8에서는 Spliterator라는 새로운 인터페이스를 제공한다. 
 - Iterator 처럼 Spliterator는 소스의 요소 탐색 기능을 제공한다는 점은 같지만 Spliterator은 병렬 작업에 특화되어있다. 
+```java
+public interface Spliterator<T> {
+    boolean tryAdvance(Customer<? super T> action);
+    Spliterator<T> trySplit();
+    long estimateSize();
+    int characteristics();
+}
+```
+- tryAdvance메서드는 Spliterator의 요소를 하나씩 순차적으로 소비 하면서 탐색해야할 요소가 남아 있으면 참을 반환한다. 
+- trtSplit 메서드는 Spliterator의 일부 요소를 분할 후 Spliterator를 생성한다. 
+- estimateSize 메서드는 탐색해야 할 요소수 정보를 제공한다. 
+
 ### 7.3.1 분할 과정 
+- 1단계 trySplit 호출 후 두 번째 Spliterator가 생성된다. 
+- 2단계 두개의 Spliterator에서 trySplipt를 호출하면 네 개의 Spliterator이 생성된다. 
+- trySplipt의 결과가 null이 될 때까지 반복하고 재귀 분할 과정이 종료된다. 
+- 
 ### 7.3.2 Spliterator의 특성
 - characteristics라는 추상 메서드도 정의한다. Characteristics 메서드는 Spliterator 자체의 특성 집합을 포함하는 int를 반환한다. 
 - Spliterator를 이용하는 프로그램은 이들 특성을 참고해서 Spliterator를 더 잘 제어하고 최적화할 수 있다.
