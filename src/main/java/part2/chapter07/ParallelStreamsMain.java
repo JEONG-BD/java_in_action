@@ -18,7 +18,7 @@ public class ParallelStreamsMain {
         long start = System.currentTimeMillis();
         long sum = Stream.iterate(1L, i-> i +1)
                 .limit(n)
-                //.peek(i -> System.out.println("Thread: " + Thread.currentThread().getName() + " processing: " + i))
+                .peek(i -> System.out.println("Thread: " + Thread.currentThread().getName() + " processing: " + i))
                 .reduce(0L, Long::sum);
         long end = System.currentTimeMillis();
         System.out.println("Elapsed Time: " + (end - start) + " ms");
@@ -35,7 +35,7 @@ public class ParallelStreamsMain {
         long sum = Stream.iterate(1L, i -> i + 1)
                 .limit(n)
                 .parallel()
-                //..peek(i -> System.out.println("Thread: " + Thread.currentThread().getName() + " processing: " + i))
+                .peek(i -> System.out.println("Thread: " + Thread.currentThread().getName() + " processing: " + i))
                 .reduce(0L, Long::sum);
 
         long end = System.currentTimeMillis();
