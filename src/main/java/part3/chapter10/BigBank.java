@@ -5,6 +5,7 @@ import part3.chapter10.model.Stock;
 import part3.chapter10.model.Trade;
 
 import static part3.chapter10.MethodChainingOrderBuilder.forCustomer;
+import static part3.chapter10.NestedFunctionOrderBuilder.*;
 
 public class BigBank {
     public static void main(String[] args) {
@@ -12,7 +13,9 @@ public class BigBank {
 
 
         plain();
-
+        methodChaining();
+        nestedFunction();
+        lambda();
 
 
     }
@@ -46,7 +49,7 @@ public class BigBank {
         order.addTrade(trade2);
     }
 
-    public void methodChaining() {
+    public static void methodChaining() {
         Order order = forCustomer("BigBank")
                 .buy(80).stock("IBM").on("NYSE").at(125.00)
                 .sell(50).stock("GOOGLE").on("NASDAQ").at(375.00)
@@ -54,5 +57,43 @@ public class BigBank {
 
         System.out.println("Method chaining:");
         System.out.println(order);
+    }
+
+
+    public static void nestedFunction() {
+        Order order = order("BigBank",
+                buy(80,
+                        stock("IBM", on("NYSE")),
+                        at(125.00)),
+                sell(50,
+                        stock("GOOGLE", on("NASDAQ")),
+                        at(375.00))
+        );
+
+        System.out.println("Nested function:");
+        System.out.println(order);
+    }
+
+
+    public static void lambda() {
+        Order order = LambdaOrderBuilder.order(o -> {
+            o.forCustomer("BigBank");
+            o.buy(t -> {
+                t.quantity(80);
+                t.price(125.00);
+                t.stock(s -> {
+                    s.symbol("IBM");
+                    s.market("NYSE");
+                });
+            });
+            o.sell(t -> {
+                t.quantity(50);
+                t.price(375.00);
+                t.stock(s -> {
+                    s.symbol("GOOGLE");
+                    s.market("NASDAQ");
+                });
+            });
+        });
     }
 }

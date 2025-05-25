@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customer='" + customer + '\'' +
+                ", trades=" + trades +
+                '}';
+    }
 
     private String customer;
 

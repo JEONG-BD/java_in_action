@@ -2,6 +2,14 @@ package part3.chapter10.model;
 
 public class Stock {
 
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "symbol='" + symbol + '\'' +
+                ", market='" + market + '\'' +
+                '}';
+    }
+
     private String symbol;
     private String market;
 

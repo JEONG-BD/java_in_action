@@ -1,6 +1,15 @@
 package part3.chapter10.model;
 
 public class Trade {
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "stock=" + stock +
+                ", type=" + type +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 
     public enum Type {
         BUY, SELL
