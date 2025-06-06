@@ -95,11 +95,38 @@ public static void localDateTimeInformation(){
 }
 ```
 ### 12.1.3 Instant 클래스 : 기계의 날짜와 시간
+- 기계의 관점에서는 연속된 시간에서 특정 지점을 하나의 큰 수로 표현하는 것이 가장 자연스러운 시간 표현 방법이다. 
+- java.time.Instant 클래스에서는 이와 같은 기계적인 관점에서 시간을 표현하다. 
+- 유닉스 에포크 시간(1970.01.01.00:00:00:UTC) 기준으로 특정 지점까지 시간을 초로 표현한다. 
+- 팩토리 메서드 ofEpochSecond에 초를 넘겨줘서 인스턴스 생성이 가능하다. 
 ### 12.1.4 Duration과 Period 정의
+- 위의 클래스들은 Temporal 인터페이스를 구현한다. 
+- Temporal 인터페이스는 특정 시간을 모델링하는 객체의 값을 어떻게 읽고 조작할지 정의한다. 
+- Duration 클래스의 정적 팩토리 메서드 between을 사용하면 두 객체 사이의 지속 시간을 만들 수 있다. 
+- Duration 클래스는 초와 나노초로 시간 단위를 표현하므로 between 메서드에는 LocalDate를 전달 불가능하다. 
+- 년, 월, 일로 시간을 표현할 때는 Period 클래스를 사용한다. 
+```java
+private static void durationLocalTime() {
+    LocalTime time1 = LocalTime.of(13, 00, 00);
+    LocalTime time2 = LocalTime.of(11, 30, 00);
+    Duration duration = Duration.between(time1, time2);
+    System.out.println(duration);
+}
+
+private static void periodLocalDate(){
+    Period period = Period.between(
+            LocalDate.of(2025, 1, 1), 
+            LocalDate.of(2026, 1, 1));
+    System.out.println(period);
+}
+```
+- 지금 까지 살펴본 모든 클래스는 불변이다. 불변 클래스는 함수형 프로그래밍 그리고 스레드 안전성과 도메인 모델의 일관성을 유지하는 데 좋은 특징이다. 
+
 ***
 
 ## 12.2 날짜 조정, 파싱 포메팅
 ### 12.2.1 TemporalAdjusters 사용하기
+- 
 ### 12.2.2 날짜와 시간 객체 출력과 파싱
 ***
 
