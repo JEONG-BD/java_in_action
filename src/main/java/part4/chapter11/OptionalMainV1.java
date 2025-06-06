@@ -115,4 +115,22 @@ public class OptionalMainV1 {
 
             return person.flatMap(p -> car.map(c -> findCheapesInsurance(p, c)));
     }
+
+    public String getCarInsuranceNameAge(Optional<PersonV2> person, int minAge){
+        return person.filter(p-> p.getAge() > minAge)
+                .flatMap(PersonV2::getCar)
+                .flatMap(CarV2::getInsurance)
+                .map(InsuranceV2::getName)
+                .orElse("Unknown");
+
+
+    }
+
+    public static Optional<Integer> stringToInt(String s){
+        try {
+            return Optional.of(Integer.parseInt(s));
+        }catch (NumberFormatException e){
+            return Optional.empty();
+        }
+    }
 }

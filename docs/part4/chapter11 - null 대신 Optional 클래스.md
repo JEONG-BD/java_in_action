@@ -65,7 +65,8 @@ public static String getCarInsuranceNameNullCheckV2(Person person){
 - null은 아무 의미도 표한하지 않는다. 
 - 자바 철학에 위배된다? 
 - 형식 시스템에 구멍은 만든다
-  - null은 무형식이며 정보를 포함하고 있지 않으므로 모든 참조형식에 null을 할당할 수 있고 이런식으로 할당된 null이 시스템의 다른 부분으로 퍼졌을 때 애초에 null이 어떤 의미로 사용되었는지 알 수 없다. 
+  - null은 무형식이며 정보를 포함하고 있지 않는다. 
+  - 모든 참조형식에 null을 할당할 수 있고 이런식으로 할당된 null이 시스템의 다른 부분으로 퍼졌을 때 애초에 null이 어떤 의미로 사용되었는지 알 수 없다. 
 ### 11.1.3 다른 언어는 Null 대신에 무얼 사용하나?
 - 그루비 같은 언어에서는 내비게이션 연산자를 도입 
 - 하스켈, 스칼라 등의 함수형 언어는 선택형 값을 저장할 수 있는 형식을 제공한다. 
@@ -75,7 +76,7 @@ public static String getCarInsuranceNameNullCheckV2(Person person){
 - 자바 8은 하스켈과 스칼라의 영향을 받아서 java.util.Optional<T>라는 새로운 클래스를 제공한다. 
 - Optional은 선택형값을 캡슐화하는 클래스다. 
 - 값이 있으면 <u>Optional 클래스는 값을 감싸고 값이 없으면 Optional.empty 메서드로 Optional을 반환한다.</u>
-- null을 참조하려면 NullPointerException이 발생하지만 Optional.empty()는 Optional객체이므로 이를 다양한 방식으로 활용이 가능핟. 
+- null을 참조하려면 NullPointerException이 발생하지만 Optional.empty()는 Optional객체이므로 이를 다양한 방식으로 활용이 가능하다. 
 - Optional 클래스를 사용하면서 모델의 의미 semantic가 더 명확해졌음을 확인 가능하다. 
 - Optional 을 이용하면 값이 없는 상황이 데이터의 문제인지 알고리즘의 버그인지 명확하게 구분이 가능하다. 
 *** 
@@ -121,7 +122,8 @@ return person.flatMap(PersonV2::getCar)
 #### Optional을 활용한 Person/Car/Insurance 참조 체인 
 - Person을 Optional로 감싼 다음 flatMap(Person::getCar)을 호출하면 Optional내부의 Person에 Function을 적용한다. 
 - getCar 메서드는 Optional<Car>를 반환하므로 중첩 Optional이 생성된다. 
-- flapMap 연산으로 Optional 을 평준화 한다. 평준화 과정이란 두 Optional을 합치는 기능을 수행하면서 둘중 하나라도 null이면 빈 Optional을 생성한다. 
+- flapMap 연산으로 Optional 을 평준화 한다. 
+- 평준화 과정이란 두 Optional을 합치는 기능을 수행하면서 둘중 하나라도 null이면 빈 Optional을 생성한다. 
  
 ### 11.3.4 Optional 스트림 조작
 - 자바 9에서는 Optional 을 포함하는 스트림을 쉽게 처리할 수 있도록 Optional에 stream 메서드를 추가했다.
@@ -174,13 +176,49 @@ public Optional<InsuranceV2> nullSafeFindCheapstInsuranceV2(Optional<PersonV2> p
 }
 ```
 ### 11.3.7 필터로 특정값 거르기
-- 
+- filter 메서드는 프레디케이트를 인수로 받는다. 
+- Optional 객체가 값을 가지며 프레디케이트와 일치하면 filter메서드는 그 값을 반환하고 그렇지 않으면 빈 Optional객체를 반환한다. 
+```java
+  public String getCarInsuranceNameAge(Optional<PersonV2> person, int minAge){
+      return person.filter(p-> p.getAge() > minAge)
+              .flatMap(PersonV2::getCar)
+              .flatMap(CarV2::getInsurance)
+              .map(InsuranceV2::getName)
+              .orElse("Unknown");
+  }
+```
 ***
 ## 11.4 Optional을 사용한 실용 예제
+- Optional 클래스를 효과적으로 이용하려면 잠재적으로 존재하지 않는 값의 처리 방법을 바꿔야  한다. 
+- 코드 구현을 바꾸는 것이 아니라 네이티브 자바 API와 상호작용 하는 방식도 바꿔야 한다.
 ### 11.4.1 잠제적으로 Null이 될 수 있는 대상을 Optional로 감싸기
+- 기존의 자바 API에서는 null 을 반환하면서 요청한 값이 없거나 어떤 문제로 계산에 실패했음을 알린다. 
+- Map의 get 메서드는 요청한 키에 대응하는 값을 찾지 못했을 때 null을 반환하는데 Optional을 반환하는 것이 더 바람직하다.
+
+```java
+import java.util.Optional;
+
+// Before 
+Object value = map.get("key");
+// After 
+Optional<Object> value = Optional.ofNullable(map.get("key"));
+```
 ### 11.4.2 예외와 Optional 클래스
+- 자바 API는 어떤 이유에서 값을 제공할 수 없을 때 null을 반환하는 대신 예외를 발생시킬 때도 있다. 
+- 전형적인 예가 문자열을 정수로 반환하는 정적메서드 Integer.parseInt(String)이다. 
+```java
+public static Optional<Integer> stringToInt(String s){
+    try {
+        return Optional.of(Integer.parseInt(s));
+    }catch (NumberFormatException e){
+        return Optional.empty();
+    }
+}
+```
 ### 11.4.3 기본형 Optional를 사용하지 말아야 하는 이유
-### 11.4.4 응용
+- 스트림처럼 Optional도 기본형으로 특화된 OptionalInt, OptionalLong, OptionalDouble등의 클레스를 제공한다. 
+- 기본형 특화 Optional은 Optional 클래스의 유용한 메서드 map, flatMap, filter 등을 지원하지 않는다. 
+
 ***
 > 마틴 게이브리얼 우르마, 『모던 자바 인 액션』, 한빛미디어 (2019)  
 
