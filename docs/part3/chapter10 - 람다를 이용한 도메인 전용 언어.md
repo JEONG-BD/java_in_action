@@ -45,13 +45,14 @@
 - DSL의 카테고리를 구분하는 가장 흔한 방법은 마틴 파울러가 소개한 방법으로 DSL을 내/외부로 나누는 것이다. 
 #### 내부 DSL 
 - 내부 DSL 이란 자바로 구현한 DSL을 의미한다. 
-- 역사적으로 자바를 이용한 표현혁 있는 DSL을 만드는 것에 한계가 존재 했지만 람다 표현식으로 이 문제가 어느 정도 해결되었다. 
+- 역사적으로 자바를 이용한 표현력 있는 DSL을 만드는 것에 한계가 존재 했지만 람다 표현식으로 이 문제가 어느 정도 해결되었다. 
 - 
 ```java
-List<String> numbers = Arrays.asList("one", "two", "three"); numbers.forEach( new Consumer<String>() {
-@Override
-public void accept( String s ) {
-           System.out.println(s);
+List<String> numbers = Arrays.asList("one", "two", "three"); 
+numbers.forEach( new Consumer<String>() {
+    @Override
+    public void accept( String s ) {
+        System.out.println(s);
     } 
 });
 
@@ -72,9 +73,10 @@ numbers.forEach(s -> System.out.println(s));
 
 ## 10.2 최신 자바 API의 작은 DSL
 - 자바의 새로운 기능의 장점을 적용한 첫 API는 네이티브 자바 API 자신이다. 
-- 
+
 ### 10.2.1 스트림 API는 컬렉션을 조작하는 DSL
 - Stream 인터페이스는 네이티브 자바 API에 작은 내부 DSL을 적용한 종은 예로 컬렉션의 항목을 필터, 정렬, 변환하는 작지만 강력한 DSL로 볼 수 있다. 
+
 ### 10.2.2 데이터를 수집하는 DSL인 Collectors
 - Collector 인터페이스는 데이터 수집을 수행하는 DSL로 간주할 수 있다.
 
@@ -145,7 +147,7 @@ public static void nestedFunction() {
 ## 10.4 실생활의 자바 8 DSL
 ### 10.4.1 jOOQ
 - SQL은 DSL은 가장 흔히 광범위 하게 사용하는 분야
-- jOOQ는 SQL을 구현하는 내부적 DSL로 자바에 직접 내장된 형식 안전 어어이다. 
+- jOOQ는 SQL을 구현하는 내부적 DSL로 자바에 직접 내장된 형식 안전 언어이다. 
 - 스트림 API와 조합해서 사용할 수 있다는 것이 jOOQ DSL의 장점이다. 
 
 ### 10.4.2 큐컴버
