@@ -8,7 +8,8 @@ public class ShopMain {
         ShopV1 shopV1 = new ShopV1("Test");
         long startTime = System.currentTimeMillis();
         //double resultValue = shopV1.getPrices("test");
-        Future<Double> result = shopV1.getAsyncPrices("test");
+        //Future<Double> result = shopV1.getAsyncPrices("test");
+        Future<Double> result = shopV1.getAsyncPricesCompleteExceptionally("test");
 
         doSomethingElse();
         try {
