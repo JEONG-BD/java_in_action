@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ShopPriceV1 {
     public final List<ShopV1> shops = Arrays.asList(
@@ -28,6 +29,18 @@ public class ShopPriceV1 {
                 .collect(Collectors.toList());
     }
 
+
+
+    public List<String> findPricesDiscountSequential(String product) {
+        return shops.stream()
+                .map(shop -> shop.getPriceWithDiscount(product))
+                .map(Quote::parse)
+                .map(Discount::applyDiscount)
+                .collect(Collectors.toList());
+    }
+
+
+
     public  List<String> findPriceParallel(String prodduct){
         return shops.stream()
                 .map(shop -> String.format("%s price is %.2f",
@@ -35,22 +48,8 @@ public class ShopPriceV1 {
                         shop.getPrices(prodduct)))
                 .collect(Collectors.toList());
     }
-    public  List<String> findPriceCompletableFuture(String prodduct) {
-
-        List<CompletableFuture<String>> priceFutures = shops.stream()
-                .map(shop -> CompletableFuture.supplyAsync(
-                        () -> String.format("%s price is %.2f",
-                                shop.getName(),
-                                shop.getPrices(prodduct)))
-                )
-                .collect(Collectors.toList());
 
 
-        List<String> prices = priceFutures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
-        return prices;
-    }
 
     public  List<String> findPriceCompletableFutureExecutor(String prodduct){
 

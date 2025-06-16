@@ -31,6 +31,14 @@ public class ShopV1 {
         return calculatePrice(product);
     }
 
+
+
+    public String getPriceWithDiscount(String product) {
+        double price = calculatePrice(product); Discount.Code code = Discount.Code.values()[
+                random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", name, price, code);
+    }
+
     public Future<Double> getAsyncPrices(String product){
         //System.out.println("1. [getPrices method]");
         CompletableFuture<Double> futurePrice = new CompletableFuture<>();

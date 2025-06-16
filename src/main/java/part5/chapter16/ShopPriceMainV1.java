@@ -11,6 +11,8 @@ public class ShopPriceMainV1 {
         execute("parallel" , () -> shopPriceMainV1.findPriceParallel("BestPrice"));
         execute("completable" , () -> shopPriceMainV1.findPriceCompletableFuture("BestPrice"));
         execute("completable executor" , () -> shopPriceMainV1.findPriceCompletableFutureExecutor("BestPrice"));
+        execute("original discount" , () -> shopPriceMainV1.findPricesDiscountSequential("BestPrice"));
+        execute("completable discount" , () -> shopPriceMainV1.findPricesDiscountSequential("BestPrice"));
 
     }
 
