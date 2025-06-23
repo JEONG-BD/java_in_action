@@ -7,8 +7,8 @@ public class ShopPriceDiscountMainV1 {
     private static ShopPriceDiscount discountPrice = new ShopPriceDiscount();
 
     public static void main(String[] args) {
-        execute("completable" , () -> discountPrice.findPriceCompletableFuture("BestPrice"));
         execute("original discount" , () -> discountPrice.findPricesDiscountSequential("BestPrice"));
+        execute("completable" , () -> discountPrice.findPriceCompletableFuture("BestPrice"));
         execute("completable discount" , () -> discountPrice.findPricesDiscountSequential("BestPrice"));
 
     }

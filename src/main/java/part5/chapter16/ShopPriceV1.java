@@ -42,7 +42,7 @@ public class ShopPriceV1 {
 
 
     public  List<String> findPriceParallel(String prodduct){
-        return shops.stream()
+        return shops.parallelStream()
                 .map(shop -> String.format("%s price is %.2f",
                         shop.getName(),
                         shop.getPrices(prodduct)))

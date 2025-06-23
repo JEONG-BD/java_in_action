@@ -27,7 +27,6 @@ public class ShopV1 {
     // 가격을 반환한다.
     public double getPrices(String product){
         //System.out.println("1. [getPrices method]");
-
         return calculatePrice(product);
     }
 

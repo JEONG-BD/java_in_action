@@ -9,10 +9,7 @@ public class ShopPriceMainV1 {
     public static void main(String[] args) {
         execute("original" , () -> shopPriceMainV1.findPrice("BestPrice"));
         execute("parallel" , () -> shopPriceMainV1.findPriceParallel("BestPrice"));
-        execute("completable" , () -> shopPriceMainV1.findPriceCompletableFuture("BestPrice"));
         execute("completable executor" , () -> shopPriceMainV1.findPriceCompletableFutureExecutor("BestPrice"));
-        execute("original discount" , () -> shopPriceMainV1.findPricesDiscountSequential("BestPrice"));
-        execute("completable discount" , () -> shopPriceMainV1.findPricesDiscountSequential("BestPrice"));
 
     }
 
