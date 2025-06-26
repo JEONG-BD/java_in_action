@@ -1,5 +1,7 @@
 package part5.chapter17;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Flow;
 
 import static java.util.concurrent.Flow.*;
@@ -9,24 +11,43 @@ public class TempSubScription implements Subscription {
     private final Subscriber<? super TempInfo> subscriber;
 
     private final String town;
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+
 
     public TempSubScription(Subscriber<? super TempInfo> subscriber, String town) {
         this.subscriber = subscriber;
         this.town = town;
     }
 
+    //@Override
+    //public void request(long n) {
+    //    for (int i = 0; i < n ; i++) {
+    //        try {
+    //            // 온도 Subscriber로 전달
+    //            subscriber.onNext(TempInfo.fetch(town));
+    //        } catch (Exception e) {
+    //            // 에러 전달
+    //            subscriber.onError(e);
+    //            break;
+    //        }
+    //    }
+    //}
+    //
     @Override
     public void request(long n) {
-        for (int i = 0; i < n ; i++) {
-            try {
-                // 온도 Subscriber로 전달
-                subscriber.onNext(TempInfo.fetch(town));
-            } catch (Exception e) {
-                // 에러 전달
-                subscriber.onError(e);
-                break;
+
+        executor.submit(() -> {
+            for (int i = 0; i < n ; i++) {
+                try {
+                    // 온도 Subscriber로 전달
+                    subscriber.onNext(TempInfo.fetch(town));
+                } catch (Exception e) {
+                    // 에러 전달
+                    subscriber.onError(e);
+                    break;
+                }
             }
-        }
+        });
     }
 
     @Override
